@@ -10,6 +10,21 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\PosController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\SettingController;
+use App\Http\Controllers\CurrencyController;
+use App\Http\Controllers\PaymentTypeController;
+use App\Http\Controllers\ExchangeRateController;
+use App\Http\Controllers\RoleController;
+
+Route::get('/', function () {
+    return redirect()->route('login');
+});
+
+Auth::routes();
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
+});
 
 Route::middleware('admin')->group(function () {
     // Route::get('/admin', function () {
@@ -79,11 +94,36 @@ Route::get('/product/get/{id}', [ProductController::class, 'getProduct'])->name(
     Route::get('/user/search', [UserController::class, 'search'])->name('user.search');
     // Route::get('/users/get/{id}', [UserController::class, 'getUser'])->name('users.getUser');
 
-});
+    //role
+    Route::get('/roles', [RoleController::class, 'index'])->name('pages.roles.index');
+    Route::get('/roles/create', [RoleController::class, 'create'])->name('pages.roles.create');
+    
 
-Auth::routes(); // Default authentication routes
+    //setting
+    Route::get('/setting', [SettingController::class, 'index'])->name('pages.setting.index');
+    Route::put('/setting/update', [SettingController::class, 'update'])->name('pages.setting.update');
+    
+    //currency
+    // Route::get('/currency', [CurrencyController::class, 'index'])->name('currency.index');
+    Route::get('/currency/create', [CurrencyController::class, 'create'])->name('currency.create');
+    Route::post('/currency/store', [CurrencyController::class, 'store'])->name('currency.store');
+    Route::get('/currency/{id}/edit', [CurrencyController::class, 'edit'])->name('currency.edit');
+    Route::put('/currency/{id}/update', [CurrencyController::class, 'update'])->name('currency.update');
+    Route::delete('/currency/{id}/delete', [CurrencyController::class, 'destroy'])->name('currency.delete');
 
-// Authenticated routes
-Route::middleware(['auth'])->group(function () {
-    Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
+    //paymentType
+    // Route::get('/paymentType', [PaymentTypeController::class, 'index'])->name('paymentType.index');
+    Route::get('/paymentType/create', [PaymentTypeController::class, 'create'])->name('paymentType.create');
+    Route::post('/paymentType/store', [PaymentTypeController::class, 'store'])->name('paymentType.store');
+    Route::get('/paymentType/{id}/edit', [PaymentTypeController::class, 'edit'])->name('paymentType.edit');
+    Route::put('/paymentType/{id}/update', [PaymentTypeController::class, 'update'])->name('paymentType.update');
+    Route::delete('/paymentType/{id}/delete', [PaymentTypeController::class, 'destroy'])->name('paymentType.delete');
+
+    //exchangeRate
+    // Route::get('/exchangeRate', [ExchangeRateController::class, 'index'])->name('exchangeRate.index');
+    Route::get('/exchangeRate/create', [ExchangeRateController::class, 'create'])->name('exchangeRate.create');
+    Route::post('/exchangeRate/store', [ExchangeRateController::class, 'store'])->name('exchangeRate.store');
+    Route::get('/exchangeRate/{id}/edit', [ExchangeRateController::class, 'edit'])->name('exchangeRate.edit');
+    Route::put('/exchangeRate/{id}/update', [ExchangeRateController::class, 'update'])->name('exchangeRate.update');
+    Route::delete('/exchangeRate/{id}/delete', [ExchangeRateController::class, 'destroy'])->name('exchangeRate.delete');
 });

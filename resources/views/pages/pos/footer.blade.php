@@ -143,6 +143,9 @@
                             </table>
                         </div>
                     </div>
+                    <div class="d-flex justify-content-end me-5">
+                        <p>Balance: <span>0.00</span></p>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
