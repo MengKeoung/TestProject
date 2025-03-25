@@ -5,7 +5,7 @@
     <div class="card-body">
         <div class="d-flex justify-content-end">
             <div class="col-sm-6">
-                <a class="btn btn-primary float-right" href="{{ route('exchangeRate.create') }}">
+                <a class="btn btn-primary float-right" href="{{ route('admin.exchangeRate.create') }}">
                     <i class="fa fa-plus-circle"></i>
                     {{ __('Add New') }}
                 </a>
@@ -29,11 +29,11 @@
                     <td>{{ $exchangeRate->name }}</td>
                     <td>{{ $exchangeRate->symbol }}</td>
                     <td>
-                        <a href="{{ route('exchangeRate.edit', $exchangeRate->id) }}" class="btn btn-info btn-sm">
+                        <a href="{{ route('admin.exchangeRate.edit', $exchangeRate->id) }}" class="btn btn-info btn-sm">
                             <i class="fas fa-pencil-alt"></i>
                             {{ __('Edit') }}
                         </a>
-                        <form action="{{ route('exchangeRate.delete', $exchangeRate->id) }}" method="POST" class="d-inline-block">
+                        <form action="{{ route('admin.exchangeRate.delete', $exchangeRate->id) }}" method="POST" class="d-inline-block">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-danger btn-sm"

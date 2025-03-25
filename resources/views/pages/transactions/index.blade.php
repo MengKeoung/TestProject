@@ -35,7 +35,7 @@
                 </div><!-- /.col -->
 
                 <div class="col-sm-6">
-                    <a class="btn btn-primary float-right" href="{{ route('pages.transactions.create') }}">
+                    <a class="btn btn-primary float-right" href="{{ route('admin.transactions.create') }}">
                         <i class="fa fa-plus-circle"></i>
                         {{ __('Add New') }}
                     </a>
@@ -94,7 +94,7 @@
     function filterTransactions() {
         var paymentStatus = document.getElementById('payment_status').value;
         $.ajax({
-            url: '{{ route('transactions.filter') }}', 
+            url: '{{ route('admin.transactions.filter') }}', 
             type: 'GET',
             data: {
                 payment_status: paymentStatus,
@@ -108,7 +108,7 @@
     $('input.status').on('change', function() {
         $.ajax({
             type: "get",
-            url: "{{ route('pages.products.update_status') }}",
+            url: "{{ route('admin.products.update_status') }}",
             data: {
                 "id": $(this).data('id')
             },

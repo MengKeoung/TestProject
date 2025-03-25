@@ -70,7 +70,7 @@
         }
     </style>
 @endpush
-@section('contents')
+@section('content')
     <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
@@ -87,7 +87,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
-                            <form class="form-material form-horizontal" action="#"
+                            <form class="form-material form-horizontal" action="{{ route('admin.roles.store') }}"
                                 method="POST">
                                 @csrf
 
@@ -153,18 +153,16 @@
                                             <div class="col-md-8">
                                                 <input type="submit" value="{{ __('Submit') }}"
                                                     class="btn btn-outline btn-primary btn-lg" />
-                                                <a href="{{ route('pages.roles.index') }}"
+                                                <a href="{{ route('admin.roles.index') }}"
                                                     class="btn btn-outline btn-danger btn-lg"><i
                                                         class="fa fa-ban mr-2"></i>{{ __('Cancel') }}</a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-
                             </form>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>

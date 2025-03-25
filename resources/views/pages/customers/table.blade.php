@@ -17,11 +17,14 @@
                     <td>{{ $customer->phone }}</td>
                     <td>{{ $customer->email }}</td>
                     <td>
-                        <a href="{{ route('pages.customers.edit', $customer->id) }}" class="btn btn-info btn-sm btn-edit">
+                        @can('customer.edit')
+                        <a href="{{ route('admin.customers.edit', $customer->id) }}" class="btn btn-info btn-sm btn-edit">
                             <i class="fas fa-pencil-alt"></i>
                             {{ __('Edit') }}
                         </a>
-                        <form action="{{ route('pages.customers.delete', $customer->id) }}" method="POST" class="d-inline-block">
+                        @endcan
+                        @can('customer.delete')
+                        <form action="{{ route('admin.customers.delete', $customer->id) }}" method="POST" class="d-inline-block">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-danger btn-sm"
@@ -30,6 +33,7 @@
                                 {{ __('Delete') }}
                             </button>
                         </form>
+                        @endcan
                     </td>
                 </tr>
             @endforeach

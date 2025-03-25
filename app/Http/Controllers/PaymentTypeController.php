@@ -57,7 +57,7 @@ class PaymentTypeController extends Controller
                 'msg' => __('Something went wrong'),
             ];  
         }
-        return redirect()->route('pages.setting.index')->with($output);
+        return redirect()->route('admin.setting.index')->with($output);
     }
     public function edit($id)
     {
@@ -123,6 +123,6 @@ class PaymentTypeController extends Controller
                 'msg' => __('Something went wrong')
             ];
         }
-        return redirect()->route('pages.setting.index')->with($output);
+        return redirect()->route('admin.setting.index')->with($output);
     }
 }

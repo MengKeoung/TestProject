@@ -20,11 +20,14 @@
                 </div>
             </td> --}}
             <td>
-                <a href="{{ route('pages.categories.edit', $category->id) }}" class="btn btn-info btn-sm">
+                @can('category.edit')
+                <a href="{{ route('admin.categories.edit', $category->id) }}" class="btn btn-info btn-sm">
                     <i class="fas fa-pencil-alt"></i>
                     {{ __('Edit') }}
                 </a>
-                <form action="{{ route('pages.categories.delete', $category->id) }}" method="POST" class="d-inline-block">
+                @endcan
+                @can('category.delete')
+                <form action="{{ route('admin.categories.delete', $category->id) }}" method="POST" class="d-inline-block">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this category?');">
@@ -32,6 +35,7 @@
                         {{ __('Delete') }}
                     </button>
                 </form>
+                @endcan
             </td>                            
           </tr>
         @endforeach

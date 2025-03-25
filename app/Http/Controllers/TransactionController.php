@@ -234,10 +234,10 @@ class TransactionController extends Controller
         $transaction->delete();
 
         DB::commit();
-        return redirect()->route('pages.transactions.index')->with('success', __('Deleted successfully'));
+        return redirect()->route('admin.transactions.index')->with('success', __('Deleted successfully'));
     } catch (Exception $e) {
         DB::rollBack();
-        return redirect()->route('pages.transactions.index')->with('error', __('Something went wrong'));
+        return redirect()->route('admin.transactions.index')->with('error', __('Something went wrong'));
     }
 }
 

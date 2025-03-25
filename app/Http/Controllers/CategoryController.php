@@ -11,27 +11,26 @@ use Illuminate\Support\Facades\Log;
 
 class CategoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
+        if(!auth()->user()->can('category.view')) {
+            abort(403,'Unauthorized action.');
+        }
         $categories = Category::all();
         return view('pages.categories.index', compact('categories'));
     }
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
+        if(!auth()->user()->can('category.create')) {
+            abort(403,'Unauthorized action.');
+        }
         return view('pages.categories.create');
     }
     public function store(Request $request)
     {
+        if(!auth()->user()->can('category.create')) {
+            abort(403,'Unauthorized action.');
+        }
         $validator = Validator::make($request->all(), [
             'name' => 'required',
         ]);
@@ -66,19 +65,21 @@ class CategoryController extends Controller
             ];
         }
 
-        return redirect()->route('pages.categories.index')->with($output);
-    }
-    public function show($id)
-    {
-        //
+        return redirect()->route('admin.categories.index')->with($output);
     }
     public function edit($id)
     {
+        if(!auth()->user()->can('category.edit')) {
+            abort(403,'Unauthorized action.');
+        }
         $category = Category::find($id);
         return view('pages.categories.edit', compact('category'));
     }
     public function update(Request $request, $id)
     {
+        if(!auth()->user()->can('category.edit')) {
+            abort(403,'Unauthorized action.');
+        }
         $validator = Validator::make($request->all(), [
             'name' => 'required',
         ]);
@@ -113,10 +114,13 @@ class CategoryController extends Controller
             ];
         }
 
-        return redirect()->route('pages.categories.index')->with($output);
+        return redirect()->route('admin.categories.index')->with($output);
     }
     public function destroy($id)
     {
+        if(!auth()->user()->can('category.delete')) {
+            abort(403,'Unauthorized action.');
+        }
         try {
             DB::beginTransaction();
             $category = Category::findOrFail($id);
@@ -135,7 +139,7 @@ class CategoryController extends Controller
             ];
         }
         
-        return redirect()->route('pages.categories.index')->with($output);
+        return redirect()->route('admin.categories.index')->with($output);
         
     }
     public function updateStatus (Request $request)

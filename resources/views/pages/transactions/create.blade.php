@@ -310,7 +310,7 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <form id="addCustomerForm" method="POST" action="{{ route('pages.customers.store') }}"
+                    <form id="addCustomerForm" method="POST" action="{{ route('admin.customers.store') }}"
                         enctype="multipart/form-data">
                         @csrf
                         <div class="modal-body">
@@ -502,7 +502,7 @@
                 sell_lines: sellLines
             };
 
-            fetch("{{ route('pages.transactions.store') }}", {
+            fetch("{{ route('admin.transactions.store') }}", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -515,7 +515,7 @@
                 .then(data => {
                     console.log('Success', data);
                     if (data.status === 1) {
-                        window.location.href = "{{ route('pages.transactions.index') }}" + "?msg=" + encodeURIComponent(data.msg);
+                        window.location.href = "{{ route('admin.transactions.index') }}" + "?msg=" + encodeURIComponent(data.msg);
                     } else {
                         toastr.error(data.msg);
                         submitButton.disabled = false;

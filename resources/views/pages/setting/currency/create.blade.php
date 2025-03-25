@@ -5,7 +5,7 @@
         <div class="">
             <div class="card m-5 p-5">
                 <h1>create Currency</h1>
-                <form action="{{ route('currency.store') }}" method="post">
+                <form action="{{ route('admin.currency.store') }}" method="post">
                     @csrf
                     <div class="row">
                         <div class="col">
@@ -21,7 +21,7 @@
                             </div>
                         </div>
                         <div class="mb-3 d-flex justify-content-end">
-                            <a href="{{ route('pages.setting.index') }}" class="btn btn-secondary me-2">Cancel</a>
+                            <a href="{{ route('admin.setting.index') }}" class="btn btn-secondary me-2">Cancel</a>
                             <button type="submit" class="btn btn-primary">Create</button>
                         </div>
                     </div>

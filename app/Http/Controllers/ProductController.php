@@ -16,6 +16,9 @@ class ProductController extends Controller
 {
     public function index()
     {
+        if(!auth()->user()->can('product.view')) {
+            abort(403,'Unauthorized action.');
+        }
         $categories = Category::all();
         $products = Products::latest('id')->paginate(10);
         return view('pages.products.index', compact('products', 'categories'));
@@ -49,11 +52,17 @@ class ProductController extends Controller
 
     public function create()
     {
+        if(!auth()->user()->can('product.create')) {
+            abort(403,'Unauthorized action.');
+        }
         $categories = Category::pluck('name', 'id');
         return view('pages.products.create', compact('categories'));
     }
     public function store(Request $request)
     {
+        if(!auth()->user()->can('product.create')) {
+            abort(403,'Unauthorized action.');
+        }
         $validator = Validator::make($request->all(), [
             // 'product_name' => 'required',
             // 'category_id' => 'required',
@@ -115,16 +124,22 @@ class ProductController extends Controller
         }
 
 
-        return redirect()->route('pages.products.index')->with($output);
+        return redirect()->route('admin.products.index')->with($output);
     }
     public function edit($id)
     {
+        if(!auth()->user()->can('product.edit')) {
+            abort(403,'Unauthorized action.');
+        }
         $product = products::find($id);
         $categories = Category::pluck('name', 'id');
         return view('pages.products.edit', compact('product', 'categories'));
     }
     public function update(Request $request, $id)
     {
+        if(!auth()->user()->can('product.edit')) {
+            abort(403,'Unauthorized action.');
+        }
         $validator = Validator::make($request->all(), [
             // 'product_name' => 'required',
             // 'category_id' => 'required',
@@ -186,10 +201,13 @@ class ProductController extends Controller
         }
 
 
-        return redirect()->route('pages.products.index')->with($output);
+        return redirect()->route('admin.products.index')->with($output);
     }
     public function destroy($id)
     {
+        if(!auth()->user()->can('product.delete')) {
+            abort(403,'Unauthorized action.');
+        }
         try {
             DB::beginTransaction();
             $product = products::findOrFail($id);
@@ -208,7 +226,7 @@ class ProductController extends Controller
             ];
         }
 
-        return redirect()->route('pages.products.index')->with($output);
+        return redirect()->route('admin.products.index')->with($output);
     }
     public function updateStatus (Request $request)
     {

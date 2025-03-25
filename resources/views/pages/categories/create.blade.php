@@ -6,7 +6,7 @@
         <div class="">
             <div class="card m-5 p-5">
                 <h1>create category</h1>
-                <form action="{{ route('pages.categories.store') }}" method="post">
+                <form action="{{ route('admin.categories.store') }}" method="post">
                     @csrf
                     <div class="row">
                         <div class="col">
@@ -31,7 +31,7 @@
                             </div>
                         </div>
                         <div class="mb-3 d-flex justify-content-end">
-                            <a href="{{ route('pages.categories.index') }}"
+                            <a href="{{ route('admin.categories.index') }}"
                                 class="btn btn-secondary me-2">Cancel</a>
                             <button type="submit" class="btn btn-primary">Create</button>
                         </div>

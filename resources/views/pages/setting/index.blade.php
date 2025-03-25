@@ -39,7 +39,7 @@
     $('input.status').on('change', function() {
         $.ajax({
             type: "get",
-            url: "{{ route('pages.products.update_status') }}",
+            url: "{{ route('admin.products.update_status') }}",
             data: {
                 "id": $(this).data('id')
             },

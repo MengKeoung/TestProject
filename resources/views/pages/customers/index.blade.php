@@ -24,10 +24,12 @@
                     <h1 class="m-0">Customers</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
-                    <a class="btn btn-primary float-right" href="{{ route('pages.customers.create') }}">
+                    @can('customer.create')
+                    <a class="btn btn-primary float-right" href="{{ route('admin.customers.create') }}">
                         <i class="fa fa-plus-circle"></i>
                         {{ __('Add New') }}
                     </a>
+                    @endcan
                 </div>                
             </div><!-- /.row -->
         </div><!-- /.container-fluid -->

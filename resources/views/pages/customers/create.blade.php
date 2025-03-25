@@ -6,7 +6,7 @@
         <div class="">
             <div class="card m-5 p-5">
                 <h1>Create Customer</h1>
-                <form action="{{ route('pages.customers.store') }}" method="post">
+                <form action="{{ route('admin.customers.store') }}" method="post">
                     @csrf
                     <div class="row">
                         <div class="col">
@@ -26,7 +26,7 @@
                             <input type="text" class="form-control" id="email" name="email" required>
                         </div>
                         <div class="mb-3 d-flex justify-content-end">
-                            <a href="{{ route('pages.customers.index') }}"
+                            <a href="{{ route('admin.customers.index') }}"
                                 class="btn btn-secondary me-2">Cancel</a>
                             <button type="submit" class="btn btn-primary">Create</button>
                         </div>

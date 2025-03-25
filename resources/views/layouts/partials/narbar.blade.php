@@ -16,7 +16,7 @@
 <ul class="navbar-nav ml-auto">
   
   <div>
-    <a href="{{ route('pages.pos.index') }}" class="nav-link btn btn-primary " type="button">POS</a>
+    <a href="{{ route('admin.pos.index') }}" class="nav-link btn btn-primary " type="button">POS</a>
   </div>
 
 

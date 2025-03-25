@@ -3,8 +3,14 @@
         <thead class="table-light">
             <tr>
                 <th scope="col">#</th>
-                <th scope="col">User Name</th>
                 <th scope="col">Email</th>
+                <th scope="col">User Name</th>
+                <th scope="col">First Name</th>
+                <th scope="col">Last Name</th>
+                {{-- <th scope="col">Role</th> --}}
+                <th scope="col">Phone</th>
+                <th scope="col">Telegram</th>
+                <th scope="col">Image</th>
                 <th scope="col">Action</th>
             </tr>
         </thead>
@@ -13,14 +19,34 @@
                 @foreach ($users as $user)
                     <tr>
                         <th scope="row">{{ $loop->iteration }}</th>
-                        <td>{{ $user->name }}</td>
                         <td>{{ $user->email }}</td>
+                        <td>{{ $user->name }}</td>
+                        <td>{{ $user->first_name }}</td>
+                        <td>{{ $user->last_name }}</td>
+                        {{-- <td>
+                            @if($user->roles->isNotEmpty())  
+                                @foreach($user->roles as $role)
+                                    <span>{{ $role->name }}</span>
+                                @endforeach
+                            @else
+                                <span>No Roles</span>  
+                            @endif
+                        </td> --}}
+                        <td>{{ $user->phone }}</td>
+                        <td>{{ $user->telegram }}</td>
                         <td>
-                            <a href="{{ route('pages.users.edit', $user->id) }}" class="btn btn-info btn-sm">
+                            <img src="{{ asset('uploads/users/' . $user->image) }}" alt="User Image" width="50">
+                        </td>
+                        
+                        <td>
+                            @can('user.edit')
+                            <a href="{{ route('admin.users.edit', $user->id) }}" class="btn btn-info btn-sm">
                                 <i class="fas fa-pencil-alt"></i>
                                 {{ __('Edit') }}
                             </a>
-                            <form action="{{ route('pages.users.delete', $user->id) }}" method="POST"
+                            @endcan
+                            @can('user.delete')
+                            <form action="{{ route('admin.users.delete', $user->id) }}" method="POST"
                                 class="d-inline-block">
                                 @csrf
                                 @method('DELETE')
@@ -30,6 +56,7 @@
                                     {{ __('Delete') }}
                                 </button>
                             </form>
+                            @endcan
                         </td>
                     </tr>
                 @endforeach

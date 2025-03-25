@@ -16,7 +16,7 @@
         <div class="row">
             <!-- Input Section - 8 columns -->
             <div class="col-md-8">
-                <form id="editForm" method="POST" action="{{ route('pages.transactions.update', $transaction->id) }}"
+                <form id="editForm" method="POST" action="{{ route('admin.transactions.update', $transaction->id) }}"
                     enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
@@ -345,7 +345,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form id="addCustomerForm" method="POST" action="{{ route('pages.customers.store') }}"
+            <form id="addCustomerForm" method="POST" action="{{ route('admin.customers.store') }}"
                 enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
@@ -526,7 +526,7 @@
                 .then(data => {
                     console.log('Success', data);
                     if (data.status === 1) {
-                        window.location.href = "{{ route('pages.transactions.index') }}" + "?msg=" +
+                        window.location.href = "{{ route('admin.transactions.index') }}" + "?msg=" +
                             encodeURIComponent(data.msg);
                     } else {
                         toastr.error(data.msg);

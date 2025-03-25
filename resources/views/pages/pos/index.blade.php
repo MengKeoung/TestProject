@@ -112,7 +112,7 @@
                                 </select>
                             </div>
                             <div class="input-group-append">
-                                <a href="{{ route('pages.customers.create') }}"
+                                <a href="{{ route('admin.customers.create') }}"
                                     class="btn btn-warning rounded-r-lg w-full flex items-center justify-center">
                                     <i class="fa fa-plus mr-2"></i> Add Customer
                                 </a>
@@ -121,7 +121,7 @@
 
                     </div>
                     <div class="col-2">
-                        <a href="{{ route('pages.products.create') }}" class="btn btn-primary w-100">
+                        <a href="{{ route('admin.products.create') }}" class="btn btn-primary w-100">
                             <i class="fa fa-plus"></i> Add Product
                         </a>
                     </div>
@@ -244,7 +244,7 @@
 
         // Make AJAX call to get filtered results
         $.ajax({
-            url: '{{ route('pos.search') }}', // Update with your route
+            url: '{{ route('admin.pos.search') }}', // Update with your route
             type: 'GET',
             data: {
                 search_query: searchQuery

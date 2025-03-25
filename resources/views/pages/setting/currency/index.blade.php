@@ -5,7 +5,7 @@
     <div class="card-body">
         <div class="d-flex justify-content-end">
             <div class="col-sm-6">
-                <a class="btn btn-primary float-right" href="{{ route('currency.create') }}">
+                <a class="btn btn-primary float-right" href="{{ route('admin.currency.create') }}">
                     <i class="fa fa-plus-circle"></i>
                     {{ __('Add New') }}
                 </a>
@@ -27,11 +27,11 @@
                     <td>{{ $currency->name }}</td>
                     <td>{{ $currency->symbol }}</td>
                     <td>
-                        <a href="{{ route('currency.edit', $currency->id) }}" class="btn btn-info btn-sm">
+                        <a href="{{ route('admin.currency.edit', $currency->id) }}" class="btn btn-info btn-sm">
                             <i class="fas fa-pencil-alt"></i>
                             {{ __('Edit') }}
                         </a>
-                        <form action="{{ route('currency.delete', $currency->id) }}" method="POST" class="d-inline-block">
+                        <form action="{{ route('admin.currency.delete', $currency->id) }}" method="POST" class="d-inline-block">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-danger btn-sm"

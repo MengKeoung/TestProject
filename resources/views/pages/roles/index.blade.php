@@ -24,7 +24,7 @@
                     <h1 class="m-0">Roles</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
-                    <a class="btn btn-primary float-right" href="{{ route('pages.roles.create') }}">
+                    <a class="btn btn-primary float-right" href="{{ route('admin.roles.create') }}">
                         <i class="fa fa-plus-circle"></i>
                         {{ __('Add New') }}
                     </a>

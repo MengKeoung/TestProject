@@ -5,7 +5,7 @@
     <div class="card-body">
         <div class="d-flex justify-content-end">
             <div class="col-sm-6">
-                <a class="btn btn-primary float-right" href="{{ route('paymentType.create') }}">
+                <a class="btn btn-primary float-right" href="{{ route('admin.paymentType.create') }}">
                     <i class="fa fa-plus-circle"></i>
                     {{ __('Add New') }}
                 </a>
@@ -29,11 +29,11 @@
                         <td>{{ $paymentType->currency_id ? $paymentType->currency->name : 'No Currency' }}</td>
                         <td>{{ $paymentType->status }}</td>
                         <td>
-                            <a href="{{ route('paymentType.edit', $paymentType->id) }}" class="btn btn-info btn-sm">
+                            <a href="{{ route('admin.paymentType.edit', $paymentType->id) }}" class="btn btn-info btn-sm">
                                 <i class="fas fa-pencil-alt"></i>
                                 {{ __('Edit') }}
                             </a>
-                            <form action="{{ route('paymentType.delete', $paymentType->id) }}" method="POST" class="d-inline-block">
+                            <form action="{{ route('admin.paymentType.delete', $paymentType->id) }}" method="POST" class="d-inline-block">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger btn-sm"

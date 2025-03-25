@@ -35,10 +35,12 @@
                 </div><!-- /.col -->
 
                 <div class="col-sm-6">
-                    <a class="btn btn-primary float-right" href="{{ route('pages.products.create') }}">
+                    @can('product.create')
+                    <a class="btn btn-primary float-right" href="{{ route('admin.products.create') }}">
                         <i class="fa fa-plus-circle"></i>
                         {{ __('Add New') }}
                     </a>
+                    @endcan
                 </div>
             </div><!-- /.row -->
         </div><!-- /.container-fluid -->
@@ -114,7 +116,7 @@
     $('input.status').on('change', function() {
         $.ajax({
             type: "get",
-            url: "{{ route('pages.products.update_status') }}",
+            url: "{{ route('admin.products.update_status') }}",
             data: {
                 "id": $(this).data('id')
             },

@@ -42,14 +42,14 @@
                     </span>
                 </td>
                 <td>
-                    <a href="{{ route('pages.transactions.edit', $transaction->id) }}" class="btn btn-info btn-sm btn-edit">
+                    <a href="{{ route('admin.transactions.edit', $transaction->id) }}" class="btn btn-info btn-sm btn-edit">
                         <i class="fas fa-pencil-alt"></i>
                         {{ __('Edit') }}
                     </a>
-                    <form action="{{ route('pages.transactions.delete', $transaction->id) }}" method="POST" class="d-inline-block form-delete-{{ $transaction->id }}">
+                    <form action="{{ route('admin.transactions.delete', $transaction->id) }}" method="POST" class="d-inline-block form-delete-{{ $transaction->id }}">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" data-id="{{ $transaction->id }}" data-href="{{ route('pages.transactions.delete', $transaction->id) }}" class="btn btn-danger btn-sm btn-delete">
+                        <button type="submit" data-id="{{ $transaction->id }}" data-href="{{ route('admin.transactions.delete', $transaction->id) }}" class="btn btn-danger btn-sm btn-delete">
                             <i class="fa fa-trash-alt"></i>
                             {{ __('Delete') }}
                         </button>

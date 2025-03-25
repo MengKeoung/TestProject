@@ -6,7 +6,7 @@
         <div class="">
             <div class="card m-5 p-5">
                 <h1>Edit category</h1>
-                <form action="{{ route('pages.categories.update', $category->id) }}" method="post">
+                <form action="{{ route('admin.categories.update', $category->id) }}" method="post">
                     @method('PUT')
                     @csrf
                     <div class="form-group">
@@ -29,8 +29,8 @@
                         @enderror
                     </div>
                     <div class="mb-3 d-flex justify-content-end">
-                        <a href="{{ route('pages.categories.index') }}" class="btn btn-secondary me-2">Cancel</a>
-                        <button type="submit" class="btn btn-primary">Create</button>
+                        <a href="{{ route('admin.categories.index') }}" class="btn btn-secondary me-2">Cancel</a>
+                        <button type="submit" class="btn btn-primary">Update</button>
                     </div>
                 </form>
             </div>

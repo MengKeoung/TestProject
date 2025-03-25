@@ -13,15 +13,24 @@ class Customercontroller extends Controller
 {
     public function index()
     {
+        if(!auth()->user()->can('customer.view')) {
+            abort(403,'Unauthorized action.');
+        }
         $customers = Customer::all();
         return view('pages.customers.index', compact('customers'));
     }
     public function create()
     {
+        if(!auth()->user()->can('customer.create')) {
+            abort(403,'Unauthorized action.');
+        }
         return view('pages.customers.create');
     }
     public function store(Request $request)
     {
+        if(!auth()->user()->can('customer.create')) {
+            abort(403,'Unauthorized action.');
+        }
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'phone' => 'required',
@@ -60,15 +69,21 @@ class Customercontroller extends Controller
                 'msg' => __('Something went wrong'),
             ];
         }
-        return redirect()->route('pages.customers.index')->with($output);
+        return redirect()->route('admin.customers.index')->with($output);
     }
     public function edit($id)
     {
+        if(!auth()->user()->can('customer.edit')) {
+            abort(403,'Unauthorized action.');
+        }
         $customer = Customer::find($id);
         return view('pages.customers.edit', compact('customer'));
     }
     public function update(Request $request, $id)
     {
+        if(!auth()->user()->can('customer.edit')) {
+            abort(403,'Unauthorized action.');
+        }
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'phone' => 'required',
@@ -107,10 +122,13 @@ class Customercontroller extends Controller
                 'msg' => __('Something went wrong'),
             ];
         }
-        return redirect()->route('pages.customers.index')->with($output);
+        return redirect()->route('admin.customers.index')->with($output);
     }
     public function destroy($id)
     {
+        if(!auth()->user()->can('customer.delete')) {
+            abort(403,'Unauthorized action.');
+        }
         try {
             DB::beginTransaction();
             $customer = Customer::findOrFail($id);
@@ -129,7 +147,7 @@ class Customercontroller extends Controller
             ];
         }
         
-        return redirect()->route('pages.customers.index')->with($output);
+        return redirect()->route('admin.customers.index')->with($output);
         
     }
 }

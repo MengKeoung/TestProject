@@ -1,5 +1,5 @@
 
-    <form action="{{ route('pages.setting.update') }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('admin.setting.update') }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT') <!-- Use PUT method for updates -->
         <div class="card">

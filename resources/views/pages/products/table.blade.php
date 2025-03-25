@@ -29,11 +29,14 @@
                             </div>
                         </td> --}}
                         <td>
-                            <a href="{{ route('pages.products.edit', $product->id) }}" class="btn btn-info btn-sm">
+                            @can('product.edit')
+                            <a href="{{ route('admin.products.edit', $product->id) }}" class="btn btn-info btn-sm">
                                 <i class="fas fa-pencil-alt"></i>
                                 {{ __('Edit') }}
                             </a>
-                            <form action="{{ route('pages.products.delete', $product->id) }}" method="POST"
+                            @endcan
+                            @can('product.delete')
+                            <form action="{{ route('admin.products.delete', $product->id) }}" method="POST"
                                 class="d-inline-block">
                                 @csrf
                                 @method('DELETE')
@@ -43,6 +46,7 @@
                                     {{ __('Delete') }}
                                 </button>
                             </form>
+                            @endcan
                         </td>
                     </tr>
                 @endforeach
