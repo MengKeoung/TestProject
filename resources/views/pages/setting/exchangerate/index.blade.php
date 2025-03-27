@@ -18,7 +18,8 @@
                     <th scope="col">name</th>
                     <th scope="col">From Currency</th>
                     <th scope="col">To Currency</th>
-                    <th scope="col">Note</th>
+                    <th scope="col">Exchange Rate</th>
+                    {{-- <th scope="col">Note</th> --}}
                     <th scope="col">Action</th>
                 </tr>
             </thead>
@@ -27,7 +28,10 @@
                 <tr>
                     <th scope="row">{{ $loop->iteration }}</th>
                     <td>{{ $exchangeRate->name }}</td>
-                    <td>{{ $exchangeRate->symbol }}</td>
+                    <td>{{ optional($exchangeRate->fromCurrency)->name ?? 'N/A' }}</td>
+                    <td>{{ optional($exchangeRate->toCurrency)->name ?? 'N/A' }}</td>
+                    <td>{{ number_format($exchangeRate->exchange_rate, 2) }}</td>
+                    {{-- <td>{{ $exchangeRate->note }}</td> --}}
                     <td>
                         <a href="{{ route('admin.exchangeRate.edit', $exchangeRate->id) }}" class="btn btn-info btn-sm">
                             <i class="fas fa-pencil-alt"></i>

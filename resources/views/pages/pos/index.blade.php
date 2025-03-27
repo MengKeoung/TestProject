@@ -238,6 +238,7 @@
     </div>
 @endsection
 <script>
+    const exchangeRate = {{ $exchangeRates->first()->exchange_rate }};
     function filterOptions() {
         const search = document.getElementById('search').value.toLowerCase();
         const select = document.getElementById('searchSelect');
@@ -358,15 +359,19 @@
 
     // Ensure the input fields get updated before submission
     document.getElementById('total_subtotal').textContent = total.toFixed(2);
+    document.getElementById('totalusd').textContent = total.toFixed(2);
     document.getElementById('sub_total').value = total.toFixed(2); // ✅ Fix: update input value
     document.getElementById('total').textContent = total.toFixed(2);
     document.getElementById('total_qty').textContent = totalQty; // ✅ Ensure total quantity is updated
-
+    const totalKhr = total * exchangeRate;
+    document.getElementById('total_khr').textContent = totalKhr.toFixed(2);
+    document.getElementById('totalriel').textContent = totalKhr.toFixed(2);
     if (parseFloat(document.getElementById('total_discount').textContent) === 0) {
         document.getElementById('total').textContent = total.toFixed(2);
     }
     document.getElementById('total_discount').textContent = "0.00";
     document.getElementById('total').textContent = document.getElementById('total_subtotal').textContent;
+    
 }
 
 
@@ -425,9 +430,10 @@
     const totalQty = parseInt(document.getElementById("total_qty").textContent) || 0;
     const subTotal = parseFloat(document.getElementById("sub_total").value) || 0;
     const grandTotal = parseFloat(document.getElementById("total").textContent) || 0;
+    const totalKhr = parseFloat(document.getElementById('total_khr').textContent) || 0;
     const products = getSelectedProducts();
     const discountVal = $('#discount_value').val() || 0;
-
+    
     if (!customerId) {
         alert("Please select a customer.");
         return;
@@ -452,6 +458,7 @@
             total_quantity: totalQty,
             sub_total: subTotal,
             grand_total: grandTotal,
+            total_khr: totalKhr,
             products: products,
             discount: discountVal,
             _token: "{{ csrf_token() }}"
