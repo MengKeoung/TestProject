@@ -35,7 +35,7 @@
                         <td>{{ $user->phone }}</td>
                         <td>{{ $user->telegram }}</td>
                         <td>
-                            <img src="{{ asset('uploads/users/' . $user->image) }}" alt="User Image" width="50">
+                            <img src="{{ asset('uploads/users/' . ($user->image ?? 'default_image.jpg')) }}" alt="User Image" width="50">
                         </td>
                         
                         <td>

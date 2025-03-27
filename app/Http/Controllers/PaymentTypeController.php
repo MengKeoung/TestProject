@@ -103,7 +103,7 @@ class PaymentTypeController extends Controller
             ];
         }
     
-        return redirect()->route('pages.setting.index')->with($output);
+        return redirect()->route('admin.setting.index')->with($output);
     }
     public function destroy($id)
     {

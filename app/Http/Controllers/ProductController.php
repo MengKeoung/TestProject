@@ -60,28 +60,30 @@ class ProductController extends Controller
     }
     public function store(Request $request)
     {
-        if(!auth()->user()->can('product.create')) {
-            abort(403,'Unauthorized action.');
+        if (!auth()->user()->can('product.create')) {
+            abort(403, 'Unauthorized action.');
         }
+    
         $validator = Validator::make($request->all(), [
             // 'product_name' => 'required',
             // 'category_id' => 'required',
             // 'price' => 'required',
             // 'qty' => 'required',
-            //  'image' => 'nullable|image|max:2048',
+            // 'image' => 'nullable|image|max:2048',
         ]);
-
+    
         if ($validator->fails()) {
             return redirect()->back()
                 ->withErrors($validator)
                 ->withInput()
                 ->with(['success' => 0, 'msg' => __('Invalid form input')]);
         }
-
+    
         try {
             DB::beginTransaction();
-
-            $product = new products();
+    
+            // Create a new product
+            $product = new Products();
             $product->product_name = $request->product_name;
             $product->category_id = $request->category;
             $product->price = $request->price;
@@ -90,26 +92,43 @@ class ProductController extends Controller
             $product->discount_type = $request->discount_type;
             $product->discount = $request->discount;
             $product->status = $request->status;
-
+    
+            if ($request->discount_type == 'Percent') {
+                // Apply percentage discount
+                $priceAfterDiscount = ($request->price * $request->discount) / 100;
+                $product->price_after_discount = $request->price - $priceAfterDiscount;
+            } elseif ($request->discount_type == 'Amount') {
+                // Subtract discount amount directly
+                $product->price_after_discount = $request->price - $request->discount;
+            } else {
+                // If no discount or invalid discount type, keep the original price
+                $product->price_after_discount = $request->price;
+            }
+    
+            // Handle image upload
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
                 $imageName = time() . '-' . $image->getClientOriginalName();
                 $directory = public_path('uploads/products');
-
+    
                 // Make sure the directory exists
                 if (!File::exists($directory)) {
                     File::makeDirectory($directory, 0777, true);
                 }
-
-                // Move the image
+    
+                // Move the image to the directory
                 $image->move($directory, $imageName);
-
+    
                 // Save image name in the database
                 $product->image = $imageName;
             }
+    
+            // Save the product
             $product->save();
+    
+            // Commit the transaction
             DB::commit();
-
+    
             $output = [
                 'success' => 1,
                 'msg' => __('Create successfully'),
@@ -122,10 +141,10 @@ class ProductController extends Controller
                 'msg' => __('Something went wrong'),
             ];
         }
-
-
+    
+        // Redirect back to the products index page
         return redirect()->route('admin.products.index')->with($output);
-    }
+    }    
     public function edit($id)
     {
         if(!auth()->user()->can('product.edit')) {
@@ -168,6 +187,18 @@ class ProductController extends Controller
             $product->discount = $request->discount;
             $product->status = $request->status;
 
+            if ($request->discount_type == 'Percent') {
+                // Apply percentage discount
+                $priceAfterDiscount = ($request->price * $request->discount) / 100;
+                $product->price_after_discount = $request->price - $priceAfterDiscount;
+            } elseif ($request->discount_type == 'Amount') {
+                // Subtract discount amount directly
+                $product->price_after_discount = $request->price - $request->discount;
+            } else {
+                // If no discount or invalid discount type, keep the original price
+                $product->price_after_discount = $request->price;
+            }
+            
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
                 $imageName = time() . '-' . $image->getClientOriginalName();

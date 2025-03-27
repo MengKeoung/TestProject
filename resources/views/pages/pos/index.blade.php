@@ -82,6 +82,25 @@
             white-space: nowrap;
         }
 
+        .box-price-after-discount {
+            font-size: 11px;
+            font-weight: bold;
+            margin: 5px 0;
+            padding: 5px 10px;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+            background-color: #28a745;
+            /* Green background */
+            border: 2px solid #28a745;
+            /* Green border */
+            border-radius: 5px;
+            /* Rounded corners for the box */
+            color: white;
+            text-align: center;
+        }
+
+
         @media (max-width: 768px) {
             .col-lg-3 {
                 width: 50%;
@@ -190,8 +209,9 @@
                                         @foreach ($category->products as $product)
                                             <div class="col-lg-3 col-md-4 col-6 mb-2">
                                                 <button class="info-box"
-                                                    style="border: none; width: 100%; padding: 10px; cursor: pointer;"
-                                                    onclick="selectProduct({{ $product->id }}, '{{ $product->product_name }}', {{ $product->price }})">
+                                                    style="border: none; width: 100%; padding: 15px 3px; cursor: pointer;"
+                                                    onclick="selectProduct({{ $product->id }}, '{{ $product->product_name }}', {{ $product->price }},
+                                                    {{ $product->price_after_discount }}, {{ $product->qty }})">
                                                     <div class="box-content">
                                                         <div class="image-container">
                                                             <img src="{{ asset('uploads/products/' . ($product->image ?? 'default_image.png')) }}"
@@ -200,6 +220,8 @@
                                                         <div class="text-container">
                                                             <p class="box-title">{{ $product->product_name }}</p>
                                                             <p class="box-price">${{ $product->price }}</p>
+                                                            <p class="box-price-after-discount">
+                                                                ${{ $product->price_after_discount }}</p>
                                                         </div>
                                                     </div>
                                                 </button>
@@ -211,7 +233,6 @@
                         @endforeach
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
@@ -229,8 +250,6 @@
         }
     }
 
-
-    // Function to perform the search and show results
     function searchProduct() {
         const searchQuery = document.getElementById('product_search').value;
         const searchResults = document.getElementById('search_results');
@@ -253,18 +272,23 @@
                 // Display the results
                 let options = '';
                 response.forEach(product => {
+                    // If product qty <= 0, display a "Out of Stock" message
+                    let qtyDisplay = product.qty <= 0 ? 'Out of Stock' : `${product.qty}`;
+
                     options += `
-                <li class="cursor-pointer p-3 hover:bg-gray-100 hover:text-blue-600 transition-all ease-in-out duration-200 border-b border-gray-200 list-group-item" 
-                    onclick="selectProduct(${product.id}, '${product.product_name}', ${product.price})">
-                    <div class="flex items-left space-x-4">
-                        <span>Product Name:</span>
-                        <span class="me-5">${product.product_name}</span>
-                        <span>Price:</span>
-                        <span class="me-5">$${product.price}</span>
-                        <span>Inventory:</span>
-                        <span class="me-5">${product.qty}</span>
-                    </div>
-                </li>`;
+                    <li class="cursor-pointer p-3 hover:bg-gray-100 hover:text-blue-600 transition-all ease-in-out duration-200 border-b border-gray-200 list-group-item" 
+                        onclick="selectProduct(${product.id}, '${product.product_name}', ${product.price}, ${product.price_after_discount}, ${product.qty})">
+                        <div class="flex items-left space-x-4">
+                            <span>Product Name:</span>
+                            <span class="me-3">${product.product_name}</span>
+                            <span>Price:</span>
+                            <span class="me-3">$${product.price}</span>
+                            <span> Price After Discount:</span>
+                            <span class="me-3">$${product.price_after_discount}</span>
+                            <span>Inventory:</span>
+                            <span class="me-3">${qtyDisplay}</span>
+                        </div>
+                    </li>`;
                 });
                 searchResults.innerHTML = options;
                 searchResults.classList.remove('hidden');
@@ -273,33 +297,40 @@
         });
     }
 
-    function selectProduct(productId, productName, productPrice) {
-    const tableBody = document.getElementById('selected_product_table');
-    const existingRow = Array.from(tableBody.rows).find(row => row.getAttribute('data-id') == productId);
-    const inputElement = document.getElementById('product_search');
+    function selectProduct(productId, productName, productPrice, productPriceAfterDiscount, productQty) {
+        // If product is out of stock or quantity is invalid, show alert and prevent insertion
+        if (productQty <= 0) {
+            alert(`${productName} is out of stock!`);
+            return; // Prevent adding the product to the table
+        }
 
-    // Clear the search input and hide the results
-    inputElement.value = '';
-    const searchResults = document.getElementById('search_results');
-    searchResults.classList.add('d-none');
 
-    if (existingRow) {
-        // If the product already exists in the table, update the quantity
-        const qtyInput = existingRow.querySelector('.qty-input');
-        qtyInput.value = parseInt(qtyInput.value) + 1;
-        updateSubtotal(qtyInput, productPrice);
-    } else {
-        // If the product is not in the table, add it as a new row
-        const rowCount = tableBody.rows.length + 1;
-        const row = tableBody.insertRow();
-        row.setAttribute('data-id', productId);
+        const tableBody = document.getElementById('selected_product_table');
+        const existingRow = Array.from(tableBody.rows).find(row => row.getAttribute('data-id') == productId);
+        const inputElement = document.getElementById('product_search');
 
-        row.innerHTML = `
+        // Clear the search input and hide the results
+        inputElement.value = '';
+        const searchResults = document.getElementById('search_results');
+        searchResults.classList.add('d-none');
+
+        if (existingRow) {
+            // If the product already exists in the table, update the quantity
+            const qtyInput = existingRow.querySelector('.qty-input');
+            qtyInput.value = parseInt(qtyInput.value) + 1;
+            updateSubtotal(qtyInput, productPriceAfterDiscount);
+        } else {
+            // If the product is not in the table, add it as a new row
+            const rowCount = tableBody.rows.length + 1;
+            const row = tableBody.insertRow();
+            row.setAttribute('data-id', productId);
+
+            row.innerHTML = `
             <td>${rowCount}</td>
             <td>${productName}</td>
-            <td><input type="number" value="1" class="qty-input" onchange="updateSubtotal(this, ${productPrice})"></td>
-            <td class="price">${productPrice.toFixed(2)}</td>
-            <td class="subtotal">${productPrice.toFixed(2)}</td>
+            <td><input type="number" value="1" class="qty-input" onchange="updateSubtotal(this, ${productPriceAfterDiscount})"></td>
+            <td class="price">${productPriceAfterDiscount.toFixed(2)}</td>
+            <td class="subtotal">${productPriceAfterDiscount.toFixed(2)}</td>
             <td>
                 <button type="button" class="btn btn-danger btn-sm" onclick="removeProduct(this)">
                     <i class="fa fa-times"></i>
@@ -307,28 +338,29 @@
             </td>
         `;
 
-        calculateTotalSubtotal(); // Add this line
+            calculateTotalSubtotal(); // Add this line
+        }
     }
-}
 
-function calculateTotalSubtotal() {
+    function calculateTotalSubtotal() {
     const subtotals = document.querySelectorAll('.subtotal');
     const qtyInputs = document.querySelectorAll('.qty-input');
     let total = 0;
     let totalQty = 0;
 
     subtotals.forEach(subtotal => {
-        total += parseFloat(subtotal.textContent) || 0;  
+        total += parseFloat(subtotal.textContent) || 0;
     });
 
     qtyInputs.forEach(input => {
-        totalQty += parseInt(input.value) || 0;  // Sum up the quantities
+        totalQty += parseInt(input.value) || 0; // Sum up the quantities
     });
 
-    document.getElementById('total_subtotal').textContent = total.toFixed(2);  
-    document.getElementById('sub_total').value = total.toFixed(2);
+    // Ensure the input fields get updated before submission
+    document.getElementById('total_subtotal').textContent = total.toFixed(2);
+    document.getElementById('sub_total').value = total.toFixed(2); // ✅ Fix: update input value
     document.getElementById('total').textContent = total.toFixed(2);
-    document.getElementById('total_qty').textContent = totalQty;  // Display the total quantity
+    document.getElementById('total_qty').textContent = totalQty; // ✅ Ensure total quantity is updated
 
     if (parseFloat(document.getElementById('total_discount').textContent) === 0) {
         document.getElementById('total').textContent = total.toFixed(2);
@@ -337,28 +369,102 @@ function calculateTotalSubtotal() {
     document.getElementById('total').textContent = document.getElementById('total_subtotal').textContent;
 }
 
-function updateSubtotal(inputElement, price) {
-    const row = inputElement.closest('tr');
-    let qty = parseInt(inputElement.value);
 
-    if (qty <= 1) {
-        qty = 1;
-        inputElement.value = 1;
+    function updateSubtotal(inputElement, price) {
+        const row = inputElement.closest('tr');
+        let qty = parseInt(inputElement.value);
+
+        if (qty <= 1) {
+            qty = 1;
+            inputElement.value = 1;
+        }
+
+        const subtotal = (qty * price).toFixed(2);
+        row.querySelector('.subtotal').textContent = subtotal;
+
+        calculateTotalSubtotal();
+
     }
 
-    const subtotal = (qty * price).toFixed(2);
-    row.querySelector('.subtotal').textContent = subtotal;
+    function removeProduct(button) {
+        const row = button.closest('tr');
+        row.remove();
+        calculateTotalSubtotal(); // Recalculate after removal
+        document.getElementById('total_discount').textContent = "0.00";
+        document.getElementById('total').textContent = document.getElementById('total_subtotal').textContent;
+    }
+    function getSelectedProducts() {
+        const products = [];
+        document.querySelectorAll("#selected_product_table tr").forEach(row => {
+            const productId = row.getAttribute("data-id");
+            const qtyInput = row.querySelector(".qty-input");
+            const priceElement = row.querySelector(".price");
+            const subtotalElement = row.querySelector(".subtotal");
 
-    calculateTotalSubtotal(); 
-   
-}
+            if (productId && qtyInput && priceElement && subtotalElement) {
+                const qty = parseInt(qtyInput.value) || 0;
+                const price = parseFloat(priceElement.textContent) || 0;
+                const subtotal = parseFloat(subtotalElement.textContent) || 0;
 
-function removeProduct(button) {
-    const row = button.closest('tr');
-    row.remove();
-    calculateTotalSubtotal(); // Recalculate after removal
-    document.getElementById('total_discount').textContent = "0.00";
-    document.getElementById('total').textContent = document.getElementById('total_subtotal').textContent;
+                if (qty > 0) {
+                    products.push({
+                        id: productId,
+                        qty: qty,
+                        price: price,
+                        subtotal: subtotal
+                    });
+                }
+            }
+        });
+        return products;
+    }
+    function storeSale() {
+    calculateTotalSubtotal(); // ✅ Ensure latest total and subtotal are calculated
+
+    const customerId = document.getElementById("searchableSelect").value;
+    const totalQty = parseInt(document.getElementById("total_qty").textContent) || 0;
+    const subTotal = parseFloat(document.getElementById("sub_total").value) || 0;
+    const grandTotal = parseFloat(document.getElementById("total").textContent) || 0;
+    const products = getSelectedProducts();
+    const discountVal = $('#discount_value').val() || 0;
+
+    if (!customerId) {
+        alert("Please select a customer.");
+        return;
+    }
+
+    if (products.length === 0) {
+        alert("No products selected.");
+        return;
+    }
+
+    if (totalQty < 1) {
+        alert("Total quantity must be at least 1.");
+        return;
+    }
+
+    $.ajax({
+        url: "{{ route('admin.pos.store') }}",
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({
+            customer_id: customerId,
+            total_quantity: totalQty,
+            sub_total: subTotal,
+            grand_total: grandTotal,
+            products: products,
+            discount: discountVal,
+            _token: "{{ csrf_token() }}"
+        }),
+        success: function(response) {
+            alert("Sale recorded successfully!");
+            location.reload();
+        },
+        error: function(xhr) {
+            console.log(xhr.responseJSON);
+            alert("Error: " + JSON.stringify(xhr.responseJSON.errors));
+        }
+    });
 }
 
 </script>

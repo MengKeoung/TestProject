@@ -6,8 +6,11 @@
                 <th scope="col">Product Name</th>
                 <th scope="col">Category</th>
                 <th scope="col">Quantity</th>
+                <th scope="col">Discount Type</th>
+                <th scope="col">Discount</th>
                 <th scope="col">Price</th>
-                <th scope="col">Description</th>
+                <th scope="col">Price After Discount</th>
+                <th scope="col">Image</th>
                 {{-- <th scope="col">Status</th> --}}
                 <th scope="col">Action</th>
             </tr>
@@ -20,8 +23,13 @@
                         <td>{{ $product->product_name }}</td>
                         <td>{{ $product->category_id ? $product->category->name : 'No category' }}</td>
                         <td>{{ $product->qty }}</td>
-                        <td>{{ $product->price }}</td>
-                        <td>{{ $product->description }}</td>
+                        <td>{{ $product->discount_type }}</td>
+                        <td>{{ $product->discount }}</td>
+                        <td>{{ $product->price }}$</td>
+                        <td>{{ $product->price_after_discount }}$</td>
+                        <td>
+                            <img src="{{ asset('uploads/products/' . ($product->image ?? 'default_image.png')) }}" alt="Product Image" width="50">
+                        </td>
                         {{-- <td>
                             <div class="custom-control custom-switch">
                                 <input type="checkbox" class="custom-control-input switcher_input status" id="status_{{ $product->id }}" data-id="{{ $product->id }}" {{ $product->status == 1 ? 'checked' : '' }} name="status">

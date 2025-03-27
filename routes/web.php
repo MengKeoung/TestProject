@@ -62,8 +62,10 @@ Route::middleware('admin')->name('admin.')->group(function () {
     Route::delete('/customers/{id}/delete', [CustomerController::class, 'destroy'])->name('customers.delete');
 
     //pos
-    Route::get('/pos', [PosController::class, 'index'])->name('pos.index');
+    Route::get('/allsales', [PosController::class, 'index'])->name('allsales.index');
+    Route::get('/pos', [PosController::class, 'create'])->name('pos.create');
     Route::get('/pos/search', [PosController::class, 'searchProduct'])->name('pos.search');
+    Route::post('/pos/store', [PosController::class, 'store'])->name('pos.store');
 
 
     //transaction

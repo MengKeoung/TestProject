@@ -74,7 +74,6 @@
             </div>
         </div>
     </div>
-    <!-- Modal Structure -->
     <div class="modal fade" id="paymentType" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-xl"> <!-- Large modal -->
             <div class="modal-content">
@@ -84,6 +83,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
+                        <!-- Left Column: Calculator -->
                         <div class="col">
                             <div class="card max-w-lg mx-auto p-4 border rounded shadow-lg">
                                 <div class="mb-3">
@@ -116,18 +116,19 @@
                             </div>
                         </div>
     
+                        <!-- Middle Column: Payment Types -->
                         <div class="col">
                             <div class="card max-w-lg mx-auto p-4 border rounded shadow-lg">
                                 <h1 class="mb-3">Payment Type</h1>
-                                <div class="grid grid-cols-2 gap-4">
-                                    <button class="btn btn-primary text-center bg-blue-500 text-white p-3 rounded" onclick="addPayment('ABA')">ABA</button>
-                                    <button class="btn btn-primary text-center bg-blue-500 text-white p-3 rounded" onclick="addPayment('AC')">AC</button>
-                                    <button class="btn btn-primary text-center bg-blue-500 text-white p-3 rounded" onclick="addPayment('USD Cash')">USD Cash</button>
-                                    <button class="btn btn-primary text-center bg-blue-500 text-white p-3 rounded" onclick="addPayment('KHR Cash')">KHR Cash</button>
-                                </div>
+                                @foreach ($paymenttypes as $paymenttype)
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <button class="btn btn-primary text-center bg-blue-500 text-white p-3 rounded m-2" onclick="addPayment('{{ $paymenttype->name }}')">{{ $paymenttype->name }}</button>
+                                    </div>
+                                @endforeach
                             </div>
                         </div>
     
+                        <!-- Right Column: Payment Summary Table -->
                         <div class="col">
                             <table class="table-auto w-full border-collapse border border-gray-300">
                                 <thead>
@@ -155,6 +156,7 @@
         </div>
     </div>
     
+
     <div class="container-fluid">
         <footer class="footer position-fixed bottom-0 w-100">
             <div class="row">
@@ -168,6 +170,7 @@
                             <tr>
                                 <td class="text-end fw-bold w-2/3">Discount :</td>
                                 <td class="text-end w-1/3" id="total_discount">0.00</td>
+                                <input type="hidden" id="discount_value">
                             </tr>
                             <tr>
                                 <td class="text-end fw-bold w-2/3">SubTotal :</td>
@@ -175,7 +178,7 @@
                                 <input type="hidden" name="" id="sub_total">
                             </tr>
                             <tr>
-                                <td class="text-end fw-bold w-2/3">Total :</td>
+                                <td class="text-end fw-bold w-2/3">GrandTotal :</td>
                                 <td class="text-end w-1/3" id="total">0.00</td>
                             </tr>
                             <tr>
@@ -217,7 +220,7 @@
                             </button>
                         </div>
                         <div class="col-lg-3 col-6">
-                            <button class="small-box bg-success"
+                            <button class="small-box bg-success" onclick="storeSale()"
                                 style="border: none; width: 100%; padding:  3px;  cursor: pointer;">
                                 <div class="inner">
                                     <i class="fa fa-save" style="font-size: 1.5rem;"></i>
@@ -235,8 +238,9 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
-           const outputElement = document.getElementById('output');
+       const outputElement = document.getElementById('output');
 
+// Keyboard shortcuts
 document.addEventListener('keydown', function(event) {
     const key = event.key;
     if (!isNaN(key)) {
@@ -251,6 +255,7 @@ document.addEventListener('keydown', function(event) {
     }
 });
 
+// Append number to the display
 function appendNumber(number) {
     if (outputElement.value === '0') {
         outputElement.value = number;
@@ -259,6 +264,7 @@ function appendNumber(number) {
     }
 }
 
+// Remove last number
 function backspace() {
     outputElement.value = outputElement.value.slice(0, -1);
     if (outputElement.value === '') {
@@ -266,10 +272,12 @@ function backspace() {
     }
 }
 
+// Clear output
 function clearOutput() {
     outputElement.value = '0';
 }
 
+// Add payment row to the table
 function addPayment(paymentType) {
     const amount = outputElement.value;
 
@@ -293,12 +301,13 @@ function addPayment(paymentType) {
     clearOutput();
 }
 
+// Remove a row from the table
 function removeRow(button) {
     const row = button.parentElement.parentElement;
     row.remove();
 }
 
-// Function to save the payment data
+// Save payments function
 function savePayments() {
     const rows = document.querySelectorAll('#paymentTableBody tr');
     const payments = [];
@@ -306,7 +315,10 @@ function savePayments() {
     rows.forEach(row => {
         const paymentType = row.cells[0].textContent;
         const amount = parseFloat(row.cells[1].textContent);
-        payments.push({ paymentType, amount });
+        payments.push({
+            paymentType,
+            amount
+        });
     });
 
     // Here you can send the payments array to your server using an API or log it
@@ -315,27 +327,46 @@ function savePayments() {
     // Optionally, you can close the modal after saving
     $('#paymentType').modal('hide');
 }
+
         $(document).ready(function() {
+            // Calculate Total Subtotal
             calculateTotalSubtotal();
+
+            // When clicking on submit button in the modal
             $('#submitButton').on('click', function(event) {
                 event.preventDefault();
+
+                // Get Discount Values
                 const discountPercentage = parseFloat($('#discount_percentage').val()) || 0;
                 const discountAmount = parseFloat($('#discount_amount').val()) || 0;
+
+                // Get SubTotal Value
                 const subTotal = parseFloat($('#sub_total').val()) || 0;
+
+                console.log('SubTotal:', subTotal); // Log for debugging
+
                 let total = subTotal;
+
+                // Apply Discount Percentage
                 if (discountPercentage > 0) {
                     const discount = (subTotal * discountPercentage) / 100;
                     total = subTotal - discount;
                     $('#total').text(total.toFixed(2));
                     $('#total_discount').text(discount.toFixed(2));
-                } else if (discountAmount > 0) {
+                    $('#discount_value').val(discount);
+                }
+                // Apply Discount Amount
+                else if (discountAmount > 0) {
                     total = subTotal - discountAmount;
                     $('#total').text(total.toFixed(2));
                     $('#total_discount').text(discountAmount.toFixed(2));
+                    $('#discount_value').val(discountAmount);
                 } else {
                     $('#total').text(subTotal.toFixed(2));
                     $('#total_discount').text(0);
                 }
+
+                // Close the Discount Modal
                 $('#modalDiscount').modal('hide');
             });
         });

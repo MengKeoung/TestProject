@@ -51,10 +51,10 @@
                   </li>
               @endif
               <li class="nav-item">
-                  <a href="{{ route('admin.pos.index') }}" class="nav-link">
+                  <a href="{{ route('admin.allsales.index') }}" class="nav-link">
                       <i class="nav-icon fa fa-shopping-cart"></i>
                       <p>
-                          Sales
+                         All Sales
                       </p>
                   </a>
               </li>
